@@ -13,7 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Persistence;
 using Microsoft.EntityFrameworkCore;
-
+using MediatR;
+using Application.Activities;
 
 namespace API
 {
@@ -47,6 +48,8 @@ namespace API
                     //need to specify cors policy to restrict the request origin
                 });
             });
+
+            services.AddMediatR(typeof(List.Handler).Assembly); //tell mediator where to find handlers
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
