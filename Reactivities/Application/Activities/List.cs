@@ -22,8 +22,9 @@ namespace Application.Activities
             }
 
             public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
+            //cantellation token: use it when the request is cancelled (waiting for too long etc.)
             {
-                return await _context.Activities.ToListAsync();
+                return await _context.Activities.ToListAsync(cancellationToken);
             }
         }
     }
