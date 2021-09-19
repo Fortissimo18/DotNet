@@ -23,7 +23,8 @@ namespace API.Controllers
         {
             return await Mediator.Send(new Details.Query{Id = id}); //set Id to id when initialise 'Details' class
         }
-
+        
+        [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity){ 
             //IActionResult used for command with HTTP return type
             return Ok(await Mediator.Send(new Create.Command {Activity=activity}));
