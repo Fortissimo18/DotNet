@@ -8,7 +8,7 @@ export default observer(function ActivityFrom() {
     //activity:selectedActivity means use the alias of selectedActivity for the prop activity,
     //as the useState hook also has this name
     const { activityStore } = useStore();
-    const { selectedActivity, closeForm, createActivity, updateActivity, loading} = activityStore;
+    const { selectedActivity, createActivity, updateActivity, loading} = activityStore;
 
     const initialState = selectedActivity ?? {
         id: '',
@@ -42,7 +42,7 @@ export default observer(function ActivityFrom() {
                 <Form.Input placeholder='City' value={activity.city} name='city' onChange={handleInputChange} />
                 <Form.Input placeholder='Venue' value={activity.venue} name='venue' onChange={handleInputChange} />
                 <Button loading={loading} floated='right' positive type='submit' content='Submit' />
-                <Button floated='right' positive type='button' content='Cancel' onClick={closeForm} />
+                <Button floated='right' positive type='button' content='Cancel' />
             </Form>
         </Segment>
     );
