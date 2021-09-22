@@ -13,7 +13,7 @@ export default observer(function ActivityDashboard() {
     const {loadActivities, activityRetristry} = activityStore;
 
     useEffect(() => {
-      if (activityRetristry.size <= 1) activityStore.loadActivities();
+      if (activityRetristry.size <= 1) loadActivities();
       },[activityRetristry.size, loadActivities]
   ) // the [] inside then is to ensure the query only runs once
   
