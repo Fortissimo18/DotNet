@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
-import { v4 as uuid } from 'uuid';
 
 export default class ActivityStore {
     activityRetristry = new Map<string, Activity>();
@@ -14,16 +13,16 @@ export default class ActivityStore {
         makeAutoObservable(this);
     }
 
-    get activitiesByDate(){
-        return Array.from(this.activityRetristry.values()).sort((a,b) => 
-        Date.parse(a.date)- Date.parse(b.date));
+    get activitiesByDate() {
+        return Array.from(this.activityRetristry.values()).sort((a, b) =>
+            Date.parse(a.date) - Date.parse(b.date));
     }
 
     loadActivities = async () => {
         try {
             const activities = await agent.Activities.list();
             activities.forEach(activity => {
-               this.setActivity(activity);
+                this.setActivity(activity);
             });
             this.setLoadingInitial(false);
         } catch (error) {
@@ -32,31 +31,37 @@ export default class ActivityStore {
         }
     }
 
-    loadActivity = async (id: string) =>{
+    loadActivity = async (id: string) => {
         let activity = this.getActivity(id);
-        if(activity){
+
+        if (activity) {
             this.selectedActivity = activity;
-        }else{
+            return activity;
+        }
+        else {
             this.loadingInitial = true;
-            try{
+            try {
                 activity = await agent.Activities.details(id);
                 this.setActivity(activity);
-                this.selectedActivity = activity;
-                console.log(this.selectedActivity.id);
+                runInAction(() => {
+                    this.selectedActivity = activity;
+                })
                 this.setLoadingInitial(false);
-            }catch(error){
+                return activity;
+            }
+            catch (error) {
                 console.log(error);
                 this.setLoadingInitial(false);
             }
         }
     }
 
-    private setActivity = (activity: Activity)=>{
+    private setActivity = (activity: Activity) => {
         activity.date = activity.date.split('T')[0];
-        this.activityRetristry.set(activity.id,activity);
+        this.activityRetristry.set(activity.id, activity);
     }
 
-    private getActivity = (id: string) =>{
+    private getActivity = (id: string) => {
         return this.activityRetristry.get(id);
     }
 
@@ -66,7 +71,6 @@ export default class ActivityStore {
 
     createActivity = async (activity: Activity) => {
         this.loading = true;
-        activity.id = uuid();
         try {
             await agent.Activities.create(activity);
             runInAction(() => {
